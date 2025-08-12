@@ -445,5 +445,31 @@ window.addEventListener('beforeinstallprompt', (e) => {
   });
 });
 </script>
+<!-- Popup Όρων Χρήσης & Πολιτικής Απορρήτου -->
+<div id="termsPrivacyPopup" class="popup-overlay" style="display:none;">
+  <div class="popup" style="max-height:80vh; overflow-y:auto; text-align:left;">
+    <h2>Όροι Χρήσης & Πολιτική Απορρήτου</h2>
+    <p><strong>1. Πνευματικά Δικαιώματα:</strong> Όλο το περιεχόμενο της ιστοσελίδας PET SOS FINDER αποτελεί πνευματική ιδιοκτησία του Σωτήρη Δημητρίου. Απαγορεύεται η αναπαραγωγή, αντιγραφή ή διανομή χωρίς έγγραφη άδεια.</p>
+    <p><strong>2. Περιεχόμενο Χρηστών:</strong> Οι χρήστες δηλώνουν ότι διαθέτουν τα δικαιώματα για τις φωτογραφίες και τις αγγελίες που ανεβάζουν, παραχωρώντας στην PET SOS FINDER το δικαίωμα δημοσίευσης.</p>
+    <p><strong>3. Αποποίηση Ευθύνης:</strong> Η ιστοσελίδα λειτουργεί ως πλατφόρμα δημοσίευσης αγγελιών και δεν ευθύνεται για την ακρίβεια ή πληρότητα των πληροφοριών.</p>
+    <p><strong>4. Προσωπικά Δεδομένα:</strong> Τα στοιχεία που παρέχετε χρησιμοποιούνται αποκλειστικά για την ανάρτηση και διαχείριση των αγγελιών σας, σύμφωνα με τον GDPR. Έχετε δικαίωμα πρόσβασης, διόρθωσης και διαγραφής τους, επικοινωνώντας στο <b>sotiris.dimitriou.1988@gmail.com</b>.</p>
+    <p><strong>5. Cookies:</strong> Η ιστοσελίδα χρησιμοποιεί cookies για την καλύτερη εμπειρία χρήσης.</p>
+    <button onclick="acceptTerms()">Αποδέχομαι</button>
+  </div>
+</div>
+
+<script>
+function showTermsPopup() {
+  if (!localStorage.getItem("termsAccepted")) {
+    document.getElementById("termsPrivacyPopup").style.display = "flex";
+  }
+}
+function acceptTerms() {
+  localStorage.setItem("termsAccepted", "true");
+  document.getElementById("termsPrivacyPopup").style.display = "none";
+}
+window.addEventListener("load", showTermsPopup);
+</script>
 </body>
-</html>
+    </html>
+    
