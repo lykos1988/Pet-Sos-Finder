@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Pet SOS Finder</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#28a745">
+  <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/T1tw0fc1/file-00000000f46c61f7aad70d3141366646.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="logo">
+        <img src="https://i.postimg.cc/BQgxhZfC/file-00000000f46c61f7aad70d3141366646-removebg-preview.png" alt="" width="80" height="80">
+      </div>
+      <div>
+        <div class="title">Pet SOS Finder</div>
+        <div style="font-size:12px;opacity:0.9">Βρες ή ανέφερε κατοικίδιο</div>
+      </div>
+      <div class="phone-section">
+        <div class="phone-title">Τηλέφωνο κακοποίησης ζώων</div>
+        <div class="phone-badge">📞 10410</div>
+      </div>
+    </div>
+
+    <div class="content" id="mainContent">
+      <!-- HOME -->
+      <section id="homeView">
+        <div class="home-card">
+          <div class="illu">🐾🐱</div>
+          <h1 class="appname">PET SOS FINDER</h1>
+          <p class="small">Αναφέρετε αν χάθηκε ή βρέθηκε κατοικίδιο — ή δείτε τις αναφορές άλλων.</p>
+          <button class="btn btn-report" onclick="openForm('lost')">Αναφορά ότι χάθηκε κατοικίδιο</button>
+          <button class="btn btn-found" onclick="openForm('found')">Αναφορά ότι βρέθηκε κατοικίδιο</button>
+          <button class="btn btn-view" onclick="showReports()">Προβολή αναφορών</button>
+        </div>
+        <div class="bottom-image"></div>
+      </section>
+
+      <!-- FORM VIEW -->
+      <section id="formView" style="display:none;">
+        <div class="card">
+          <form id="reportForm">
+            <div class="row">
+              <label id="nameLabel">Όνομα κατοικιδίου</label>
+              <input type="text" id="petName" required>
+            </div>
+            <div class="row">
+              <label>Περιγραφή</label>
+              <textarea id="petDesc" required></textarea>
+            </div>
+            <div class="row">
+              <label>Τοποθεσία</label>
+              <input type="text" id="petLoc" required>
+            </div>
+            <div class="row">
+              <label>Στοιχεία επικοινωνίας</label>
+              <input type="text" id="petContact" placeholder="Τηλέφωνο ή Email" required>
+            </div>
+            <div class="row">
+              <label>Φωτογραφία</label>
+              <input type="file" accept="image/*" id="petPhoto"> 
+              <div class="photo-preview" id="photoPreview">Προεπισκόπηση</div>
+            </div>
+            <button class="btn btn-report" type="submit" style="margin-top:12px;">Αναφορά</button>
+            <button type="button" class="btn btn-view" onclick="backHome()">Αρχική</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- SUCCESS VIEW -->
+      <section id="successView" style="display:none;">
+        <div class="success-screen">
+          <div class="check">✓</div>
+          <p>Η αναφορά καταχωρήθηκε επιτυχώς!</p>
+          <button class="btn btn-view" onclick="showReports()">Δες Αναφορές</button>
+          <button class="btn btn-report" style="margin-top:8px;" onclick="backHome()">Αρχική</button>
+        </div>
+      </section>
+
+      <!-- REPORTS VIEW -->
+      <section id="reportsView" style="display:none;">
+        <div style="margin-bottom:12px; text-align:center;">
+          <select id="filterSelect" onchange="showReports()">
+            <option value="all">Όλες οι αναφορές</option>
+            <option value="lost">Μόνο Χαμένα</option>
+            <option value="found">Μόνο Βρεθέντα</option>
+          </select>
+        </div>
+        <div class="reports-list" id="reportsContainer"></div>
+        <button class="btn btn-view" style="margin-top:10px;" onclick="backHome()">Αρχική</button>
+      </section>
+    </div>
+
+    <footer>
+      © 2025 PET SOS FINDER – Σωτήρης Δημητρίου |
+      <a onclick="openPopup('contact')">Επικοινωνία</a> |
+      <a onclick="openPopup('about')">Σχετικά με</a>
+    </footer>
+  </div>
+
+  <!-- Popups -->
+  <div class="popup-overlay" id="popupOverlay">
+    <div class="popup" id="popupContent">
+      <h2 id="popupTitle"></h2>
+      <p id="popupText"></p>
+      <button onclick="closePopup()">Κλείσιμο</button>
+    </div>
+  </div>
+
+  <!-- Backendless SDK -->
+  <script src="https://api.backendless.com/sdk/js/latest/backendless.min.js"></script>
+  <!-- App code -->
+  <script src="app.js"></script>
+</body>
+</html>
