@@ -31,7 +31,7 @@ function openForm(type) {
   homeView.style.display = "none";
   formView.style.display = "block";
 }
-
+}
 function backHome() {
   homeView.style.display = "block";
   formView.style.display = "none";
