@@ -1,10 +1,8 @@
-// === Backendless Init ===
 Backendless.initApp("B04A6F3D-58B6-44F8-A4AC-02E62F559E6B", "D7A9D456-17DA-4810-AE0E-5AAADA5C95E2");
 
 let currentType = "lost";
 let reports = [];
 
-// === Elements ===
 const homeView = document.getElementById("homeView");
 const formView = document.getElementById("formView");
 const successView = document.getElementById("successView");
@@ -15,7 +13,6 @@ const petPhotoInput = document.getElementById("petPhoto");
 const reportsContainer = document.getElementById("reportsContainer");
 const filterSelect = document.getElementById("filterSelect");
 
-// === Make functions global ===
 window.openForm = openForm;
 window.backHome = backHome;
 window.showReports = showReports;
@@ -23,7 +20,6 @@ window.addComment = addComment;
 window.openPopup = openPopup;
 window.closePopup = closePopup;
 
-// === Navigation functions ===
 function openForm(type) {
   currentType = type;
   document.getElementById("nameLabel").innerText =
@@ -31,7 +27,7 @@ function openForm(type) {
   homeView.style.display = "none";
   formView.style.display = "block";
 }
-}
+
 function backHome() {
   homeView.style.display = "block";
   formView.style.display = "none";
@@ -49,22 +45,20 @@ function openPopup(type) {
     document.getElementById("popupTitle").innerText = "Σχετικά με";
     document.getElementById("popupText").innerHTML =
       "Η ιστοσελίδα Pet SOS Finder δημιουργήθηκε για να βοηθήσει τους ιδιοκτήτες κατοικιδίων να βρουν τα χαμένα τους ζώα ή να αναφέρουν κατοικίδια που βρέθηκαν.";
+  } else if (type === "terms") {
+    document.getElementById("popupTitle").innerText = "Όροι Χρήσης";
+    document.getElementById("popupText").innerHTML =
+      "Η ιστοσελίδα PET SOS FINDER ανήκει στον Σωτήρη Δημητρίου.<br><br>" +
+      "Η χρήση της ιστοσελίδας συνεπάγεται την αποδοχή των όρων:<br>" +
+      "• Οι αναφορές κατοικιδίων πρέπει να είναι αληθείς και χωρίς προσβλητικό περιεχόμενο.<br>" +
+      "• Απαγορεύεται η κακόβουλη χρήση ή η δημοσίευση ψευδών στοιχείων.<br>" +
+      "• Ο δημιουργός δεν φέρει ευθύνη για τυχόν ανακρίβειες που υποβάλλονται από χρήστες.";
   }
-}
-else if (type === "terms") {
-  document.getElementById("popupTitle").innerText = "Όροι Χρήσης";
-  document.getElementById("popupText").innerHTML =
-    "Η ιστοσελίδα PET SOS FINDER ανήκει στον Σωτήρη Δημητρίου.<br><br>" +
-    "Η χρήση της ιστοσελίδας συνεπάγεται την αποδοχή των όρων:<br>" +
-    "• Οι αναφορές κατοικιδίων πρέπει να είναι αληθείς και χωρίς προσβλητικό περιεχόμενο.<br>" +
-    "• Απαγορεύεται η κακόβουλη χρήση ή η δημοσίευση ψευδών στοιχείων.<br>" +
-    "• Ο δημιουργός δεν φέρει ευθύνη για τυχόν ανακρίβειες που υποβάλλονται από χρήστες.";
 }
 function closePopup() {
   document.getElementById("popupOverlay").style.display = "none";
 }
 
-// === Image Preview (local URL) ===
 petPhotoInput.addEventListener("change", function () {
   const file = this.files[0];
   if (file) {
@@ -75,7 +69,6 @@ petPhotoInput.addEventListener("change", function () {
   }
 });
 
-// === Submit Report ===
 reportForm.addEventListener("submit", async function (e) {
   e.preventDefault();
 
@@ -88,12 +81,10 @@ reportForm.addEventListener("submit", async function (e) {
   try {
     let photoURL = "";
     if (file) {
-      // Upload image to Backendless Files folder "pet_photos"
       const uploaded = await Backendless.Files.upload(file, "pet_photos");
       photoURL = uploaded.fileURL;
     }
 
-    // Save report in Backendless
     await Backendless.Data.of("reports").save({
       type: currentType,
       name,
@@ -101,7 +92,8 @@ reportForm.addEventListener("submit", async function (e) {
       loc,
       contact,
       photo: photoURL,
-      comments: []
+      comments: [],
+      createdAt: new Date().toISOString() // Ημερομηνία καταχώρησης
     });
 
     reportForm.reset();
@@ -115,20 +107,18 @@ reportForm.addEventListener("submit", async function (e) {
   }
 });
 
-// === Render Comments ===
 function renderComments(comments) {
   if (!comments || comments.length === 0)
     return "<p style='font-size:12px;color:gray;'>Κανένα σχόλιο</p>";
   return comments.map((c) => `<div class="comment">${c}</div>`).join("");
 }
 
-// === Add Comment ===
 async function addComment(id) {
   const input = document.getElementById("inp_" + id);
   const text = input.value.trim();
   if (!text) return;
 
-  // Έλεγχος για DELETE
+  // Αν το σχόλιο είναι DELETE → Διαγραφή αναφοράς
   if (text.toUpperCase() === "DELETE") {
     if (confirm("Σίγουρα θέλεις να διαγράψεις αυτή την αναφορά;")) {
       try {
@@ -144,7 +134,6 @@ async function addComment(id) {
     return;
   }
 
-  // Κανονική προσθήκη σχολίου
   try {
     const report = await Backendless.Data.of("reports").findById(id);
     report.comments = report.comments || [];
@@ -158,7 +147,6 @@ async function addComment(id) {
   input.value = "";
 }
 
-// === Show Reports ===
 async function showReports() {
   reportsContainer.innerHTML = "";
   const filter = filterSelect?.value || "all";
@@ -194,6 +182,7 @@ async function showReports() {
             ${foundNote}
             <p style="font-size:12px;color:gray;">📍 ${r.loc}</p>
             <p style="font-size:12px;color:#000;">📞 ${r.contact}</p>
+            <p style="font-size:12px;color:#555;">📅 ${r.createdAt ? new Date(r.createdAt).toLocaleString("el-GR") : ""}</p>
           </div>
         </div>
         <div class="comments" id="c_${r.objectId}">${renderComments(r.comments)}</div>
@@ -214,7 +203,6 @@ async function showReports() {
   }
 }
 
-// === Register Service Worker ===
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
