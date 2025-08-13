@@ -1,52 +1,61 @@
-const CACHE_NAME = 'pet-sos-cache-v1';
-const ASSETS_TO_CACHE = [
+const CACHE_NAME = 'pet-sos-cache-v2';
+const urlsToCache = [
   '/',
   '/index.html',
-  '/styles.css',  // αν έχεις ξεχωριστό CSS
-  '/app.js',      // αν έχεις ξεχωριστό JS αρχείο
-  '/favicon.ico',
+  '/style.css',
+  '/app.js',
   '/manifest.json',
-  // πρόσθεσε εδώ τυχόν εικόνες/logo που θες offline
+  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2' // βιβλιοθήκη supabase
 ];
 
-// Εγκατάσταση και cache αρχείων
+// Εγκατάσταση SW και cache βασικών αρχείων
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      console.log('📦 Caching app assets');
-      return cache.addAll(ASSETS_TO_CACHE);
-    })
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(urlsToCache))
   );
   self.skipWaiting();
 });
 
-// Ενεργοποίηση και καθαρισμός παλιών cache
+// Ενεργοποίηση SW και καθαρισμός παλιών caches
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
-        keys
-          .filter(key => key !== CACHE_NAME)
-          .map(key => caches.delete(key))
+        keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
       )
     )
   );
   self.clients.claim();
 });
 
-// Fetch αιτήματα - πρώτα cache, μετά δίκτυο
+// Διαχείριση fetch requests
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(response => {
-      return (
-        response ||
-        fetch(event.request).then(fetchRes => {
+  const request = event.request;
+
+  // Αν είναι εικόνα ή αρχείο supabase, προτίμησε cache-first
+  if (request.url.match(/\.(png|jpg|jpeg|gif|webp)$/i) ||
+      request.url.includes('supabase.co/storage')) {
+    event.respondWith(
+      caches.match(request).then(response =>
+        response || fetch(request).then(fetchRes => {
           return caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, fetchRes.clone());
+            cache.put(request, fetchRes.clone());
             return fetchRes;
           });
         })
-      );
-    })
+      )
+    );
+    return;
+  }
+
+  // Για όλα τα άλλα: network-first με fallback στο cache
+  event.respondWith(
+    fetch(request).then(fetchRes => {
+      return caches.open(CACHE_NAME).then(cache => {
+        cache.put(request, fetchRes.clone());
+        return fetchRes;
+      });
+    }).catch(() => caches.match(request))
   );
 });
