@@ -165,7 +165,7 @@ async function submitReport(e) {
   let photoUrl = "";
 
   if (file) {
-    // Παίρνουμε extension ή βάζουμε default jpg
+    // Παίρνουμε το extension ή default jpg
     const fileExt = file.name && file.name.includes(".") 
       ? file.name.split(".").pop() 
       : "jpg";
@@ -193,17 +193,17 @@ async function submitReport(e) {
     photoUrl = publicData.publicUrl;
   }
 
-  // Καταχώρηση στο Supabase
+  // Καταχώρηση στο Supabase με τα σωστά ονόματα πεδίων
   const { error: insertError } = await supabaseClient
     .from("reports")
     .insert([{
-      type,
-      name,
-      description,
-      loc,
-      contact,
-      photo: photoUrl,
-      comments: []
+      Type: type,
+      Name: name,
+      Desc: description,
+      Loc: loc,
+      Contact: contact,
+      Photo: photoUrl,
+      Comment: []
     }]);
 
   if (insertError) {
@@ -220,9 +220,7 @@ async function submitReport(e) {
   // Εμφανίζουμε το success view
   document.getElementById("formView").style.display = "none";
   document.getElementById("successView").style.display = "block";
-}
-function renderComments(comments){ if(!comments||comments.length===0) return "<p style='font-size:12px;color:gray;'>Κανένα σχόλιο</p>"; return comments.map(c=>`<div class="comment">${c}</div>`).join(""); }
-
+    }
 async function showReports(){
   const container = document.getElementById("reportsContainer");
   container.innerHTML = "";
