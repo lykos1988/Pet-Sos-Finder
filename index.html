@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#28a745">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/T1tw0fc1/file-00000000f46c61f7aad70d3141366646.png">
+  <title>Pet SOS Finder</title>
+  <style>
+    :root{
+      --green:#28a745;
+      --blue:#1e88e5;
+      --bg:#f5f7fb;
+      --card:#ffffff;
+      --muted:#6b7280;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: #222;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .app {
+      width:100%;
+      height:100vh;
+      max-width:500px;
+      background:#fff;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+    }
+    .topbar{
+      background:var(--green);
+      color:white;
+      padding:18px 16px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      justify-content:space-between;
+    }
+    .logo { width:42px; height:42px; background:rgba(255,255,255,0.15); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:bold; }
+    .title { font-size:16px; font-weight:700; line-height:1.2; }
+    .content{ flex:1; overflow-y:auto; padding:16px; background:var(--bg); }
+    .home-card{ background:var(--card); border-radius:20px; padding:20px; text-align:center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .illu { font-size:48px; margin-bottom:8px; }
+    h1.appname{ font-size:20px; margin-bottom:4px; }
+    p.small{ font-size:13px; color:var(--muted); margin-bottom:14px; }
+    .btn { display:block; width:100%; padding:12px; border:none; border-radius:12px; font-size:15px; font-weight:bold; margin-bottom:10px; cursor:pointer; }
+    .btn-report { background:var(--green); color:white; }
+    .btn-found  { background:var(--blue); color:white; }
+    .btn-view   { background:white; border:1px solid var(--green); color:var(--green); }
+    .card{ background:var(--card); border-radius:20px; padding:16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    form .row{ margin-bottom:12px; text-align:left; }
+    label{ display:block; font-weight:bold; margin-bottom:6px; font-size:13px; }
+    input, textarea{ width:100%; padding:10px; border-radius:10px; border:1px solid #ddd; font-size:14px; }
+    textarea{ min-height:80px; resize:vertical; }
+    .photo-preview{ width:100%; height:150px; background:#f0f0f0; border-radius:10px; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-top:6px; }
+    .photo-preview img{ width:100%; height:100%; object-fit:cover; }
+    .success-screen{ text-align:center; padding:20px; }
+    .check { width:80px; height:80px; background:#e7f7ed; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--green); font-size:40px; margin:0 auto 14px; }
+    .reports-list{ display:flex; flex-direction:column; gap:12px; }
+    .report-card{ background:var(--card); border-radius:14px; padding:12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+    .report-top{ display:flex; gap:10px; }
+    .thumb{ width:100%; border-radius:12px; background:#f0f0f0; overflow:hidden; }
+    .thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .meta{ flex:1; }
+    .meta h3{ font-size:15px; margin-bottom:4px; }
+    .meta p{ font-size:13px; color:var(--muted); }
+    .comments{ margin-top:10px; border-top:1px solid #eee; padding-top:8px; }
+    .comment{ background:#f9f9f9; padding:8px; border-radius:8px; font-size:13px; margin-bottom:6px; }
+    .add-comment{ display:flex; gap:6px; }
+    .add-comment input{ flex:1; padding:8px; border-radius:8px; border:1px solid #ddd; }
+    .add-comment button{ padding:8px; border-radius:8px; border:none; background:var(--green); color:white; cursor:pointer; }
+    footer{ background:#f0f0f0; padding:10px; font-size:12px; color:#444; text-align:center; }
+    footer a{ color:var(--green); text-decoration:none; margin:0 5px; cursor:pointer; }
+    .popup-overlay{ position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:999; }
+    .popup{ background:white; padding:20px; border-radius:10px; max-width:400px; width:90%; text-align:center; }
+    .popup h2{ margin-bottom:10px; font-size:18px; }
+    .popup button{ background:var(--green); color:white; border:none; padding:8px 12px; border-radius:8px; margin-top:10px; cursor:pointer; }
+    .phone-section { display:flex; flex-direction:column; align-items:center; }
+    .phone-title { font-size:11px; opacity:0.9; margin-bottom:4px; text-align:center; }
+    .phone-badge { display:flex; align-items:center; justify-content:center; border:2px solid white; border-radius:50px; padding:4px 10px; font-weight:bold; font-size:14px; background:rgba(255,255,255,0.15); cursor:pointer; }
+    .bottom-image { width: 100%; height: 200px; background: url('https://i.postimg.cc/pXQGYtdf/file-000000005a0461f7ac070060328b7622-removebg-preview.png') no-repeat center bottom; background-size: contain; background-color: var(--bg); }
+
+    #filterSelect {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--green);
+      border-radius: 12px;
+      background: white;
+      color: var(--green);
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      appearance: none;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    #filterSelect:focus { outline: none; border-color: var(--green); }
+    @media (max-width: 500px) { .thumb { height: 160px; } }
+    @media (min-width: 501px) { .thumb { height: 250px; } }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <div class="topbar">
+    <div class="logo">
+      <img src="https://i.postimg.cc/BQgxhZfC/file-00000000f46c61f7aad70d3141366646-removebg-preview.png" alt="Pet SOS Finder" width="80" height="80">
+    </div>
+    <div>
+      <div class="title">Pet SOS Finder</div>
+      <div style="font-size:12px;opacity:0.9">Βρες ή ανέφερε κατοικίδιο</div>
+    </div>
+    <div class="phone-section">
+      <div class="phone-title">Τηλέφωνο κακοποίησης ζώων</div>
+      <div class="phone-badge">📞 10410</div>
+    </div>
+  </div>
+
+  <div class="content" id="mainContent">
+    <!-- HOME -->
+    <section id="homeView">
+      <div class="home-card">
+        <div class="illu">🐾🐱</div>
+        <h1 class="appname">PET SOS FINDER</h1>
+        <p class="small">Αναφέρετε αν χάθηκε ή βρέθηκε κατοικίδιο — ή δείτε τις αναφορές άλλων.</p>
+        <button class="btn btn-report" onclick="openForm('lost')">Αναφορά ότι χάθηκε κατοικίδιο</button>
+        <button class="btn btn-found" onclick="openForm('found')">Αναφορά ότι βρέθηκε κατοικίδιο</button>
+        <button class="btn btn-view" onclick="showReports()">Προβολή αναφορών</button>
+      </div>
+      <div class="bottom-image"></div>
+    </section>
+
+    <!-- FORM VIEW -->
+    <section id="formView" style="display:none;">
+      <div class="card">
+        <form id="reportForm">
+          <div class="row">
+            <label id="nameLabel">Όνομα κατοικιδίου</label>
+            <input type="text" id="petName" required>
+          </div>
+          <div class="row">
+            <label>Περιγραφή</label>
+            <textarea id="petDesc" required></textarea>
+          </div>
+          <div class="row">
+            <label>Τοποθεσία</label>
+            <input type="text" id="petLoc" required>
+          </div>
+          <div class="row">
+            <label>Στοιχεία επικοινωνίας</label>
+            <input type="text" id="petContact" placeholder="Τηλέφωνο ή Email" required>
+          </div>
+          <div class="row">
+            <label>Φωτογραφία</label>
+            <input type="file" accept="image/*" id="petPhoto">
+            <div class="photo-preview" id="photoPreview">Προεπισκόπηση</div>
+          </div>
+          <button class="btn btn-report" style="margin-top:12px;">Αναφορά</button>
+          <button type="button" class="btn btn-view" onclick="backHome()">Αρχική</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- SUCCESS VIEW -->
+    <section id="successView" style="display:none;">
+      <div class="success-screen">
+        <div class="check">✓</div>
+        <p>Η αναφορά καταχωρήθηκε επιτυχώς!</p>
+        <button class="btn btn-view" onclick="showReports()">Δες Αναφορές</button>
+        <button class="btn btn-report" style="margin-top:8px;" onclick="backHome()">Αρχική</button>
+      </div>
+    </section>
+
+    <!-- REPORTS VIEW -->
+    <section id="reportsView" style="display:none;">
+      <div style="margin-bottom:12px; text-align:center;">
+        <select id="filterSelect">
+          <option value="all">Όλες οι αναφορές</option>
+          <option value="lost">Μόνο Χαμένα</option>
+          <option value="found">Μόνο Βρεθέντα</option>
+        </select>
+      </div>
+      <div class="reports-list" id="reportsContainer"></div>
+      <button class="btn btn-view" style="margin-top:10px;" onclick="backHome()">Αρχική</button>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 PET SOS FINDER – Σωτήρης Δημητρίου. Με επιφύλαξη παντός δικαιώματος. and designed by Sotiris Dimitriou |
+    <a onclick="openPopup('contact')">Επικοινωνία</a> |
+    <a onclick="openPopup('about')">Σχετικά με</a>
+    <br><br>
+    <!-- PayPal Donate Button -->
+    <div id="donate-button-container">
+      <div id="donate-button"></div>
+      <script src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js" charset="UTF-8"></script>
+      <script>
+        PayPal.Donation.Button({
+          env:'production',
+          hosted_button_id:'HHL8RG87VQ27S',
+          image: {
+            src:'https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif',
+            alt:'Donate with PayPal button',
+            title:'PayPal - The safer, easier way to pay online!',
+          }
+        }).render('#donate-button');
+      </script>
+    </div>
+  </footer>
+</div>
+
+<!-- Popups -->
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup" id="popupContent">
+    <h2 id="popupTitle"></h2>
+    <p id="popupText"></p>
+    <button onclick="closePopup()">Κλείσιμο</button>
+  </div>
+</div>
+
+<!-- Όροι Χρήσης & Πολιτικής Απορρήτου -->
+<div id="termsPrivacyPopup" class="popup-overlay" style="display:none;">
+  <div class="popup" style="max-height:80vh; overflow-y:auto; text-align:left;">
+    <h2>Όροι Χρήσης & Πολιτική Απορρήτου</h2>
+    <p><strong>1. Πνευματικά Δικαιώματα:</strong> Όλο το περιεχόμενο της ιστοσελίδας PET SOS FINDER αποτελεί πνευματική ιδιοκτησία του Σωτήρη Δημητρίου. Απαγορεύεται η αναπαραγωγή, αντιγραφή ή διανομή χωρίς έγγραφη άδεια.</p>
+    <p><strong>2. Περιεχόμενο Χρηστών:</strong> Οι χρήστες δηλώνουν ότι διαθέτουν τα δικαιώματα για τις φωτογραφίες και τις αγγελίες που ανεβάζουν, παραχωρώντας στην PET SOS FINDER το δικαίωμα δημοσίευσης.</p>
+    <p><strong>3. Αποποίηση Ευθύνης:</strong> Η ιστοσελίδα λειτουργεί ως πλατφόρμα δημοσίευσης αγγελιών και δεν ευθύνεται για την ακρίβεια ή πληρότητα των πληροφοριών.</p>
+    <p><strong>4. Προσωπικά Δεδομένα:</strong> Τα στοιχεία που παρέχετε χρησιμοποιούνται αποκλειστικά για την ανάρτηση και διαχείριση των αγγελιών σας, σύμφωνα με τον GDPR. Έχετε δικαίωμα πρόσβασης, διόρθωσης και διαγραφής τους, επικοινωνώντας στο <b>sotiris.dimitriou.1988@gmail.com</b>.</p>
+    <p><strong>5. Cookies:</strong> Η ιστοσελίδα χρησιμοποιεί cookies για την καλύτερη εμπειρία χρήσης.</p>
+    <button onclick="acceptTerms()">Αποδέχομαι</button>
+  </div>
+</div>
+
+<!-- PWA Service Worker -->
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+    .then(() => console.log('Service Worker registered'));
+}
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const installBtn = document.createElement('button');
+  installBtn.innerText = '📲 Εγκατάσταση εφαρμογής';
+  installBtn.className = 'btn btn-view';
+  installBtn.style.marginTop = '10px';
+  document.querySelector('#homeView .home-card').appendChild(installBtn);
+  installBtn.addEventListener('click', () => {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.finally(() => deferredPrompt = null);
+  });
+});
+function showTermsPopup() {
+  if (!localStorage.getItem("termsAccepted")) {
+    document.getElementById("termsPrivacyPopup").style.display = "flex";
+  }
+}
+function acceptTerms() {
+  localStorage.setItem("termsAccepted", "true");
+  document.getElementById("termsPrivacyPopup").style.display = "none";
+}
+window.addEventListener("load", showTermsPopup);
+</script>
+
+<!-- APP LOGIC (ES Modules + Firebase) -->
+<script type="module">
+  /* ===== Firebase SDK (modular) ===== */
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getFirestore, collection, addDoc, serverTimestamp,
+    query, orderBy, where, onSnapshot, doc, updateDoc, deleteDoc, arrayUnion
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import {
+    getStorage, ref as storageRef, uploadBytes, getDownloadURL
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+  // === Your Firebase Config (from first code) ===
+  const firebaseConfig = {
+    apiKey: "AIzaSyDG97hhLatYTmLJlwpGpwwfIgBooM78GZg",
+    authDomain: "pet-sos-finder-92ccb.firebaseapp.com",
+    projectId: "pet-sos-finder-92ccb",
+    storageBucket: "pet-sos-finder-92ccb.firebasestorage.app",
+    messagingSenderId: "720023704740",
+    appId: "1:720023704740:web:895e40fd9bfd31373bc231",
+    measurementId: "G-F5BXVRT5SE"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+
+  /* ====== DOM helpers ====== */
+  const $ = (id) => document.getElementById(id);
+
+  function openForm(type){
+    $("homeView").style.display = "none";
+    $("formView").style.display = "block";
+    $("reportForm").dataset.type = type;
+    $("nameLabel").innerText = type === "found" ? "Ονοματεπώνυμο" : "Όνομα κατοικιδίου";
+  }
+  window.openForm = openForm;
+
+  function backHome(){
+    $("homeView").style.display = "block";
+    $("formView").style.display = "none";
+    $("successView").style.display = "none";
+    $("reportsView").style.display = "none";
+  }
+  window.backHome = backHome;
+
+  function openPopup(type){
+    $("popupOverlay").style.display = "flex";
+    if(type === "contact"){
+      $("popupTitle").innerText = "Επικοινωνία";
+      $("popupText").innerHTML = "Μπορείτε να επικοινωνήσετε μαζί μου στο:<br><b>sotiris.dimitriou.1988@gmail.com</b>";
+    } else if(type === "about"){
+      $("popupTitle").innerText = "Σχετικά με";
+      $("popupText").innerHTML = "Η ιστοσελίδα Pet SOS Finder δημιουργήθηκε για να βοηθήσει τους ιδιοκτήτες κατοικιδίων να βρουν τα χαμένα τους ζώα ή να αναφέρουν κατοικίδια που βρέθηκαν.";
+    }
+  }
+  function closePopup(){ $("popupOverlay").style.display = "none"; }
+  window.openPopup = openPopup;
+  window.closePopup = closePopup;
+
+  /* ====== Utils ====== */
+  function normalizeGreek(text) {
+    return (text || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }
+  function escapeHTML(str="") {
+    return str.replace(/[&<>"']/g, m => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
+    }[m]));
+  }
+
+  /* ====== Photo preview (local only) ====== */
+  $("petPhoto").addEventListener("change", function(){
+    const file = this.files[0];
+    if(file){
+      const reader = new FileReader();
+      reader.onload = e => {
+        $("photoPreview").innerHTML = `<img src="${e.target.result}" alt="Προεπισκόπηση">`;
+        $("photoPreview").dataset.preview = "1";
+      };
+      reader.readAsDataURL(file);
+    } else {
+      $("photoPreview").innerHTML = "Προεπισκόπηση";
+      delete $("photoPreview").dataset.preview;
+    }
+  });
+
+  /* ====== Firebase: Create Report ====== */
+  $("reportForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const type = e.target.dataset.type || "lost";
+    const name = $("petName").value.trim();
+    const desc = $("petDesc").value.trim();
+    const loc  = $("petLoc").value.trim();
+    const contact = $("petContact").value.trim();
+    const file = $("petPhoto").files[0];
+
+    if(!name || !desc || !loc || !contact){
+      alert("Συμπλήρωσε όλα τα πεδία.");
+      return;
+    }
+
+    let photoUrl = "";
+    try{
+      if (file) {
+        const path = `report_photos/${Date.now()}_${file.name}`;
+        const ref = storageRef(storage, path);
+        await uploadBytes(ref, file);
+        photoUrl = await getDownloadURL(ref);
+      }
+
+      const docRef = await addDoc(collection(db, "reports"), {
+        type, name, desc, loc, contact,
+        photo: photoUrl,
+        comments: [],
+        createdAt: serverTimestamp()
+      });
+
+      // reset form
+      e.target.reset();
+      $("photoPreview").innerHTML = "Προεπισκόπηση";
+      delete $("photoPreview").dataset.preview;
+
+      $("formView").style.display = "none";
+      $("successView").style.display = "block";
+      console.log("Report added with ID:", docRef.id);
+    }catch(err){
+      console.error(err);
+      alert("Κάτι πήγε στραβά κατά την αποθήκευση. Δοκίμασε ξανά.");
+    }
+  });
+
+  /* ====== Render ====== */
+  function renderComments(comments){
+    if(!comments || comments.length === 0) {
+      return "<p style='font-size:12px;color:gray;'>Κανένα σχόλιο</p>";
+    }
+    return comments.map(c=>`<div class="comment">${escapeHTML(c)}</div>`).join("");
+  }
+
+  function buildReportCard(r){
+    const statusText = r.type === "lost" ? "Χαμένο" : "Βρέθηκε";
+    const cleanedDesc = (r.desc || "").replace("και επέστρεψε στον ιδιοκτήτη του", "").trim();
+    const foundNote = (r.type === "found") ? 
+      "<p style='color:green;font-weight:bold;'>✅ Βρέθηκε</p>" : "";
+
+    const card = document.createElement("div");
+    card.className = "report-card";
+    card.innerHTML = `
+      <div class="report-top" style="flex-direction:column; align-items:center;">
+        <div class="thumb" style="width:100%; height:auto; max-height:300px;">
+          ${r.photo ? `<img src="${escapeHTML(r.photo)}" alt="Φωτογραφία αναφοράς">` : ""}
+        </div>
+        <div class="meta" style="text-align:center; margin-top:10px;">
+          <h3>${escapeHTML(r.name)} - ${statusText}</h3>
+          <p>${escapeHTML(cleanedDesc)}</p>
+          ${foundNote}
+          <p style="font-size:12px;color:gray;">📍 ${escapeHTML(r.loc)}</p>
+          <p style="font-size:12px;color:#000;">📞 ${escapeHTML(r.contact)}</p>
+        </div>
+      </div>
+      <div class="comments" id="c_${r._id}">${renderComments(r.comments)}</div>
+      <div class="add-comment">
+        <input type="text" id="inp_${r._id}" placeholder="Σχόλιο...">
+        <button data-id="${r._id}" class="btnAddComment">Αποστολή</button>
+      </div>
+    `;
+    return card;
+  }
+
+  /* ====== Subscribe / Filter ====== */
+  let unsubscribe = null;
+
+  function applySubscription(filter = "all"){
+    if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+    const base = collection(db, "reports");
+    let q = query(base, orderBy("createdAt","desc"));
+    if (filter !== "all") {
+      q = query(base, where("type","==",filter), orderBy("createdAt","desc"));
+    }
+    unsubscribe = onSnapshot(q, (snap) => {
+      const container = $("reportsContainer");
+      container.innerHTML = "";
+      if (snap.empty) {
+        container.innerHTML = "<p>Δεν υπάρχουν αναφορές</p>";
+        return;
+      }
+      snap.forEach(docSnap => {
+        const data = docSnap.data();
+        const report = {
+          _id: docSnap.id,
+          type: data.type || "lost",
+          name: data.name || "",
+          desc: data.desc || "",
+          loc: data.loc || "",
+          contact: data.contact || "",
+          photo: data.photo || "",
+          comments: data.comments || []
+        };
+        container.appendChild(buildReportCard(report));
+      });
+
+      // bind comment buttons
+      container.querySelectorAll(".btnAddComment").forEach(btn=>{
+        btn.addEventListener("click", () => addComment(btn.getAttribute("data-id")));
+      });
+    }, (err)=> {
+      console.error(err);
+      alert("Σφάλμα κατά την ανάγνωση αναφορών.");
+    });
+  }
+
+  function showReports(){
+    $("homeView").style.display = "none";
+    $("formView").style.display = "none";
+    $("successView").style.display = "none";
+    $("reportsView").style.display = "block";
+    const filter = $("filterSelect")?.value || "all";
+    applySubscription(filter);
+  }
+  window.showReports = showReports;
+
+  $("filterSelect").addEventListener("change", () => {
+    const filter = $("filterSelect").value;
+    applySubscription(filter);
+  });
+
+  /* ====== Comments / Delete-on-found ====== */
+  async function addComment(id){
+    const input = $("inp_" + id);
+    const text = (input?.value || "").trim();
+    if(!text) return;
+
+    const docRef = doc(db, "reports", id);
+
+    // Αν περιέχει "βρέθηκε" (accent-insensitive), διαγραφή
+    if (normalizeGreek(text).includes("βρεθηκε")) {
+      if (confirm("Είσαι σίγουρος ότι θέλεις να διαγράψεις την αναφορά;")) {
+        try{
+          await deleteDoc(docRef);
+          alert("Η αναφορά διαγράφηκε!");
+        }catch(err){
+          console.error(err);
+          alert("Αποτυχία διαγραφής.");
+        }
+      } else {
+        alert("Η διαγραφή ακυρώθηκε.");
+      }
+      return;
+    }
+
+    try{
+      await updateDoc(docRef, { comments: arrayUnion(text) });
+      input.value = "";
+    }catch(err){
+      console.error(err);
+      alert("Αποτυχία αποθήκευσης σχολίου.");
+    }
+  }
+  window.addComment = addComment;
+
+  // Close popup on overlay click
+  $("popupOverlay").addEventListener("click", (e)=>{
+    if (e.target.id === "popupOverlay") closePopup();
+  });
+</script>
+
+</body>
+</html>
