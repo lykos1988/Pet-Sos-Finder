@@ -211,6 +211,7 @@ if ("serviceWorker" in navigator) {
       .catch((err) => console.error("SW registration failed", err));
   });
 }
+
 // Slide-in κουμπί
 window.addEventListener('load', () => {
   const btn = document.getElementById('buyEbookBtn');
