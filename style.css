@@ -335,3 +335,21 @@ footer a {
     height: 250px;
   }
 }
+.buy-btn {
+  position: fixed;
+  bottom: 80px;   /* απόσταση από κάτω, μπορείς να την αλλάξεις */
+  right: 20px;    /* απόσταση από δεξιά */
+  background: var(--green);
+  color: #fff;
+  padding: 14px 18px;
+  border-radius: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 14px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  z-index: 2000; /* ώστε να είναι πάντα πάνω από όλα */
+  transition: background 0.3s;
+}
+.buy-btn:hover {
+  background: #218838;
+}
