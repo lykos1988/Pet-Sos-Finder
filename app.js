@@ -211,3 +211,19 @@ if ("serviceWorker" in navigator) {
       .catch((err) => console.error("SW registration failed", err));
   });
 }
+// Slide-in κουμπί
+window.addEventListener('load', () => {
+  const btn = document.getElementById('buyEbookBtn');
+  setTimeout(() => btn.classList.add('show'), 300);
+});
+
+// Popup λειτουργικότητα
+const popup = document.getElementById('ebookPopup');
+const btn = document.getElementById('buyEbookBtn');
+const closeBtn = document.querySelector('.close-btn');
+
+btn.addEventListener('click', () => popup.classList.add('show'));
+closeBtn.addEventListener('click', () => popup.classList.remove('show'));
+window.addEventListener('click', (e) => {
+  if(e.target === popup) popup.classList.remove('show');
+});
