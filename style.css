@@ -337,8 +337,8 @@ footer a {
 }
 .buy-btn {
   position: fixed;
-  bottom: 80px;   /* αντί για 40px → πιο ψηλά */
-  right: 20px;
+  bottom: 40px;   /* Απόσταση από το κάτω μέρος */
+  right: 20px;    /* Απόσταση από τη δεξιά πλευρά */
   background: var(--green);
   color: #fff;
   padding: 14px 18px;
