@@ -335,7 +335,6 @@ footer a {
     height: 250px;
   }
 }
-
 .buy-btn {
   position: fixed;
   bottom: 80px;   /* αντί για 40px → πιο ψηλά */
