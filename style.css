@@ -335,3 +335,17 @@ footer a {
     height: 250px;
   }
 }
+.buy-btn {
+  display: inline-block;
+  background: var(--green);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  margin-left: 8px;
+  transition: background 0.3s;
+}
+.buy-btn:hover {
+  background: #218838; /* πιο σκούρο πράσινο στο hover */
+}
