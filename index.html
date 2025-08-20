@@ -98,15 +98,21 @@
     </div>
 
     <footer>
-  © 2025 PET SOS FINDER – Σωτήρης Δημητρίου |
-  <a onclick="openPopup('contact')">Επικοινωνία</a> |
-  <a onclick="openPopup('about')">Σχετικά με</a> |
-  <a onclick="openPopup('terms')">Όροι Χρήσης</a> |
-  <a href="https://www.paypal.com/ncp/payment/4YRQ8LRXBH8XG" 
-     target="_blank" 
-     class="buy-btn">📖 Αγορά E-Book</a>
-    </footer>
-
+  <div class="footer-top">
+    © 2025 PET SOS FINDER – Σωτήρης Δημητρίου
+  </div>
+  <div class="footer-links">
+    <a onclick="openPopup('contact')">Επικοινωνία</a> |
+    <a onclick="openPopup('about')">Σχετικά με</a> |
+    <a onclick="openPopup('terms')">Όροι Χρήσης</a> |
+    <a href="#" onclick="alert('Πολιτική Απορρήτου: Τα στοιχεία σας χρησιμοποιούνται μόνο για τις αναφορές. Δεν κοινοποιούνται σε τρίτους.');">Πολιτική Απορρήτου</a> |
+    <a href="#" onclick="alert('Cookies: Η εφαρμογή χρησιμοποιεί cookies μόνο για λειτουργικούς λόγους.');">Cookies</a>
+  </div>
+  <div class="footer-bottom">
+    <a href="https://www.paypal.com/ncp/payment/TO_LINK_SOU" target="_blank" class="buy-btn">📖 Αγορά E-Book</a>
+  </div>
+</footer>
+     
   <!-- Popups -->
   <div class="popup-overlay" id="popupOverlay">
     <div class="popup" id="popupContent">
