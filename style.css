@@ -374,3 +374,10 @@ footer {
 .footer-bottom {
   margin-top: 5px;
 }
+.intro-tagline {
+  font-size: 12px;
+  color: #f;
+  opacity: 0.9;
+  text-align: center;
+  margin-top: 4px;
+}
